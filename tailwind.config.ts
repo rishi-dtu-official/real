@@ -39,6 +39,14 @@ export default {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
         },
+        sage: {
+          DEFAULT: "hsl(var(--sage))",
+          foreground: "hsl(var(--sage-foreground))",
+        },
+        earth: {
+          DEFAULT: "hsl(var(--earth))",
+          foreground: "hsl(var(--earth-foreground))",
+        },
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
