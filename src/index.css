@@ -109,3 +109,27 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+/* Sticky transparent navbar styles */
+.sticky {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.backdrop-blur-md {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.bg-transparent {
+  background: transparent !important;
+}
+.nav-underline {
+  height: 3px;
+  border-radius: 2px;
+  background: hsl(var(--primary));
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+}
