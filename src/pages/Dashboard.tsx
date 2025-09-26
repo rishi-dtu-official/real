@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { setDoc, doc, getDoc } from 'firebase/firestore';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../lib/firebase';
 import { Button } from '@/components/ui/button';
@@ -12,7 +12,98 @@ const Dashboard = () => {
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [profileLoading, setProfileLoading] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [editData, setEditData] = useState(null);
+  const [resumeUploading, setResumeUploading] = useState(false);
+  const [resumeError, setResumeError] = useState('');
   const navigate = useNavigate();
+
+  // Handle input changes for editable fields
+  const handleEditChange = (field, value) => {
+    setEditData(prev => ({ ...prev, [field]: value }));
+  };
+
+  // Handle array field changes (workExperience, education, projects)
+  const handleArrayChange = (arrayName, index, field, value) => {
+    setEditData(prev => ({
+      ...prev,
+      [arrayName]: prev[arrayName].map((item, i) =>
+        i === index ? { ...item, [field]: value } : item
+      )
+    }));
+  };
+
+  const addArrayItem = (arrayName, defaultItem) => {
+    setEditData(prev => ({
+      ...prev,
+      [arrayName]: [...prev[arrayName], defaultItem]
+    }));
+  };
+
+  const removeArrayItem = (arrayName, index) => {
+    setEditData(prev => ({
+      ...prev,
+      [arrayName]: prev[arrayName].filter((_, i) => i !== index)
+    }));
+  };
+
+  // Handle resume re-upload
+  const handleResumeUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setResumeUploading(true);
+    setResumeError('');
+    try {
+      const { parseResume, extractResumeInfo } = await import('../lib/uploadUtils');
+      const parseResult = await parseResume(file, () => {});
+      const extractedInfo = extractResumeInfo(parseResult.extractedText);
+      setEditData(prev => ({
+        ...prev,
+        resumeData: {
+          ...parseResult,
+          extractedSections: extractedInfo.extractedSections
+        }
+      }));
+      alert('Resume parsed successfully! Extracted ' + parseResult.wordCount + ' words.');
+    } catch (error) {
+      setResumeError(error.message);
+    }
+    setResumeUploading(false);
+  };
+
+  // Enter edit mode
+  const startEdit = () => {
+    setEditData({ ...userProfile });
+    setEditMode(true);
+  };
+
+  // Cancel edit mode
+  const cancelEdit = () => {
+    setEditMode(false);
+    setEditData(null);
+    setResumeError('');
+  };
+
+  // Save changes
+  const saveEdit = async () => {
+    if (!user) return;
+    try {
+      const userDocRef = doc(db, 'users', user.uid);
+      await setDoc(userDocRef, {
+        ...editData,
+        uid: user.uid,
+        email: user.email,
+        updatedAt: new Date()
+      });
+      setUserProfile(editData);
+      setEditMode(false);
+      setEditData(null);
+      setResumeError('');
+      alert('Profile updated successfully!');
+    } catch (error) {
+      alert('Error updating profile: ' + error.message);
+    }
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -85,13 +176,20 @@ const Dashboard = () => {
               </div>
               <span className="text-xl font-bold text-gray-900">Fornix Dashboard</span>
             </div>
-            <Button
-              onClick={handleSignOut}
-              variant="outline"
-              className="text-gray-600 hover:text-gray-800"
-            >
-              Sign Out
-            </Button>
+            <div className="flex gap-2">
+              {!editMode && (
+                <Button onClick={startEdit} variant="outline" className="text-gray-600 hover:text-gray-800">
+                  Update Profile
+                </Button>
+              )}
+              <Button
+                onClick={handleSignOut}
+                variant="outline"
+                className="text-gray-600 hover:text-gray-800"
+              >
+                Sign Out
+              </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -126,25 +224,78 @@ const Dashboard = () => {
         <Card className="mb-8">
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
-              Resume
-              {userProfile.resumeUrl && (
+              Resume Data
+              {!editMode && userProfile.resumeData?.extractedText && (
                 <Button
-                  onClick={() => window.open(userProfile.resumeUrl, '_blank')}
+                  onClick={() => {
+                    const newWindow = window.open('', '_blank');
+                    if (newWindow) {
+                      newWindow.document.write(`
+                        <html>
+                          <head><title>Resume Text - ${userProfile.resumeData.fileName}</title></head>
+                          <body style="font-family: Arial, sans-serif; padding: 20px; line-height: 1.6;">
+                            <h1>Parsed Resume Text</h1>
+                            <p><strong>File:</strong> ${userProfile.resumeData.fileName}</p>
+                            <p><strong>Word Count:</strong> ${userProfile.resumeData.wordCount}</p>
+                            <p><strong>Parsed:</strong> ${new Date(userProfile.resumeData.parsedAt).toLocaleString()}</p>
+                            <hr>
+                            <pre style="white-space: pre-wrap;">${userProfile.resumeData.extractedText}</pre>
+                          </body>
+                        </html>
+                      `);
+                    }
+                  }}
                   variant="outline"
                   size="sm"
                 >
-                  View Resume
+                  View Parsed Text
                 </Button>
               )}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {userProfile.resumeUrl ? (
-              <div className="flex items-center space-x-2">
-                <Badge variant="secondary" className="bg-green-100 text-green-800">
-                  ✅ Uploaded
-                </Badge>
-                <span className="text-sm text-gray-600">Resume uploaded successfully</span>
+            {editMode ? (
+              <div className="space-y-3">
+                <input type="file" accept=".pdf,.docx,.doc" onChange={handleResumeUpload} disabled={resumeUploading} />
+                {resumeUploading && <span className="text-sm text-gray-500">Parsing resume...</span>}
+                {resumeError && <span className="text-sm text-red-500">{resumeError}</span>}
+                {editData?.resumeData?.extractedText && (
+                  <div className="flex items-center space-x-2">
+                    <Badge variant="secondary" className="bg-green-100 text-green-800">✅ Parsed</Badge>
+                    <span className="text-sm text-gray-600">Resume parsed successfully</span>
+                  </div>
+                )}
+              </div>
+            ) : userProfile.resumeData?.extractedText ? (
+              <div className="space-y-3">
+                <div className="flex items-center space-x-2">
+                  <Badge variant="secondary" className="bg-green-100 text-green-800">
+                    ✅ Parsed
+                  </Badge>
+                  <span className="text-sm text-gray-600">Resume parsed successfully</span>
+                </div>
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div><strong>File:</strong> {userProfile.resumeData.fileName}</div>
+                  <div><strong>Word Count:</strong> {userProfile.resumeData.wordCount}</div>
+                  <div><strong>File Size:</strong> {(userProfile.resumeData.fileSize / 1024).toFixed(1)} KB</div>
+                  <div><strong>Parsed:</strong> {new Date(userProfile.resumeData.parsedAt).toLocaleDateString()}</div>
+                </div>
+                {userProfile.resumeData.extractedSections && Object.keys(userProfile.resumeData.extractedSections).length > 0 && (
+                  <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+                    <h4 className="font-medium text-sm mb-2">Auto-extracted Information:</h4>
+                    <div className="space-y-1 text-xs">
+                      {(userProfile.resumeData.extractedSections as any).email && (
+                        <div>📧 Email: {(userProfile.resumeData.extractedSections as any).email}</div>
+                      )}
+                      {(userProfile.resumeData.extractedSections as any).phone && (
+                        <div>📞 Phone: {(userProfile.resumeData.extractedSections as any).phone}</div>
+                      )}
+                      {(userProfile.resumeData.extractedSections as any).skills && (
+                        <div>🛠️ Skills: {(userProfile.resumeData.extractedSections as any).skills.join(', ')}</div>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="flex items-center space-x-2">
@@ -157,14 +308,47 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           {/* Work Experience */}
           <Card>
             <CardHeader>
               <CardTitle>Work Experience</CardTitle>
             </CardHeader>
             <CardContent>
-              {userProfile.workExperience && userProfile.workExperience.length > 0 ? (
+              {editMode ? (
+                <div className="space-y-4">
+                  {editData?.workExperience?.map((exp, index) => (
+                    <div key={index} className="border-l-2 border-green-200 pl-4 pb-2">
+                      <input
+                        className="block w-full border rounded px-2 py-1 mb-1"
+                        placeholder="Role"
+                        value={exp.role}
+                        onChange={e => handleArrayChange('workExperience', index, 'role', e.target.value)}
+                      />
+                      <input
+                        className="block w-full border rounded px-2 py-1 mb-1"
+                        placeholder="Company"
+                        value={exp.company}
+                        onChange={e => handleArrayChange('workExperience', index, 'company', e.target.value)}
+                      />
+                      <input
+                        className="block w-full border rounded px-2 py-1 mb-1"
+                        placeholder="Duration"
+                        value={exp.duration}
+                        onChange={e => handleArrayChange('workExperience', index, 'duration', e.target.value)}
+                      />
+                      <textarea
+                        className="block w-full border rounded px-2 py-1 mb-1"
+                        placeholder="Description"
+                        value={exp.description}
+                        onChange={e => handleArrayChange('workExperience', index, 'description', e.target.value)}
+                      />
+                      <button type="button" className="text-xs text-red-500" onClick={() => removeArrayItem('workExperience', index)}>Remove</button>
+                    </div>
+                  ))}
+                  <button type="button" className="text-xs text-green-600 mt-2" onClick={() => addArrayItem('workExperience', { company: '', role: '', duration: '', description: '' })}>+ Add Experience</button>
+                </div>
+              ) : userProfile.workExperience && userProfile.workExperience.length > 0 ? (
                 <div className="space-y-4">
                   {userProfile.workExperience.map((exp, index) => (
                     <div key={index} className="border-l-2 border-green-200 pl-4">
@@ -189,7 +373,34 @@ const Dashboard = () => {
               <CardTitle>Education</CardTitle>
             </CardHeader>
             <CardContent>
-              {userProfile.education && userProfile.education.length > 0 ? (
+              {editMode ? (
+                <div className="space-y-4">
+                  {editData?.education?.map((edu, index) => (
+                    <div key={index} className="border-l-2 border-blue-200 pl-4 pb-2">
+                      <input
+                        className="block w-full border rounded px-2 py-1 mb-1"
+                        placeholder="Degree"
+                        value={edu.degree}
+                        onChange={e => handleArrayChange('education', index, 'degree', e.target.value)}
+                      />
+                      <input
+                        className="block w-full border rounded px-2 py-1 mb-1"
+                        placeholder="School"
+                        value={edu.school}
+                        onChange={e => handleArrayChange('education', index, 'school', e.target.value)}
+                      />
+                      <input
+                        className="block w-full border rounded px-2 py-1 mb-1"
+                        placeholder="Year"
+                        value={edu.year}
+                        onChange={e => handleArrayChange('education', index, 'year', e.target.value)}
+                      />
+                      <button type="button" className="text-xs text-red-500" onClick={() => removeArrayItem('education', index)}>Remove</button>
+                    </div>
+                  ))}
+                  <button type="button" className="text-xs text-blue-600 mt-2" onClick={() => addArrayItem('education', { degree: '', school: '', year: '' })}>+ Add Education</button>
+                </div>
+              ) : userProfile.education && userProfile.education.length > 0 ? (
                 <div className="space-y-4">
                   {userProfile.education.map((edu, index) => (
                     <div key={index} className="border-l-2 border-blue-200 pl-4">
@@ -211,7 +422,40 @@ const Dashboard = () => {
               <CardTitle>Projects</CardTitle>
             </CardHeader>
             <CardContent>
-              {userProfile.projects && userProfile.projects.length > 0 ? (
+              {editMode ? (
+                <div className="space-y-4">
+                  {editData?.projects?.map((project, index) => (
+                    <div key={index} className="border border-gray-200 rounded-lg p-4 mb-2">
+                      <input
+                        className="block w-full border rounded px-2 py-1 mb-1"
+                        placeholder="Title"
+                        value={project.title}
+                        onChange={e => handleArrayChange('projects', index, 'title', e.target.value)}
+                      />
+                      <textarea
+                        className="block w-full border rounded px-2 py-1 mb-1"
+                        placeholder="Description"
+                        value={project.description}
+                        onChange={e => handleArrayChange('projects', index, 'description', e.target.value)}
+                      />
+                      <input
+                        className="block w-full border rounded px-2 py-1 mb-1"
+                        placeholder="Tech Stack (comma separated)"
+                        value={project.techStack?.join(', ') || ''}
+                        onChange={e => handleArrayChange('projects', index, 'techStack', e.target.value.split(',').map(t => t.trim()).filter(Boolean))}
+                      />
+                      <input
+                        className="block w-full border rounded px-2 py-1 mb-1"
+                        placeholder="Link"
+                        value={project.link}
+                        onChange={e => handleArrayChange('projects', index, 'link', e.target.value)}
+                      />
+                      <button type="button" className="text-xs text-red-500" onClick={() => removeArrayItem('projects', index)}>Remove</button>
+                    </div>
+                  ))}
+                  <button type="button" className="text-xs text-gray-600 mt-2" onClick={() => addArrayItem('projects', { title: '', description: '', techStack: [], link: '' })}>+ Add Project</button>
+                </div>
+              ) : userProfile.projects && userProfile.projects.length > 0 ? (
                 <div className="space-y-4">
                   {userProfile.projects.map((project, index) => (
                     <div key={index} className="border border-gray-200 rounded-lg p-4">
@@ -254,50 +498,102 @@ const Dashboard = () => {
               <CardTitle>Social Media & Links</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
-                {userProfile.githubUrl && (
+              {editMode ? (
+                <div className="space-y-3">
                   <div className="flex items-center space-x-3">
                     <span className="text-sm font-medium text-gray-700">GitHub:</span>
-                    <Button
-                      onClick={() => window.open(userProfile.githubUrl, '_blank')}
-                      variant="link"
-                      className="p-0 h-auto text-blue-600"
-                    >
-                      {userProfile.githubUrl}
-                    </Button>
+                    <input
+                      className="border rounded px-2 py-1 w-full"
+                      placeholder="GitHub URL"
+                      value={editData?.githubUrl || ''}
+                      onChange={e => handleEditChange('githubUrl', e.target.value)}
+                    />
                   </div>
-                )}
-                {userProfile.linkedinUrl && (
                   <div className="flex items-center space-x-3">
                     <span className="text-sm font-medium text-gray-700">LinkedIn:</span>
-                    <Button
-                      onClick={() => window.open(userProfile.linkedinUrl, '_blank')}
-                      variant="link"
-                      className="p-0 h-auto text-blue-600"
-                    >
-                      {userProfile.linkedinUrl}
-                    </Button>
+                    <input
+                      className="border rounded px-2 py-1 w-full"
+                      placeholder="LinkedIn URL"
+                      value={editData?.linkedinUrl || ''}
+                      onChange={e => handleEditChange('linkedinUrl', e.target.value)}
+                    />
                   </div>
-                )}
-                {userProfile.portfolioUrl && (
                   <div className="flex items-center space-x-3">
                     <span className="text-sm font-medium text-gray-700">Portfolio:</span>
-                    <Button
-                      onClick={() => window.open(userProfile.portfolioUrl, '_blank')}
-                      variant="link"
-                      className="p-0 h-auto text-blue-600"
-                    >
-                      {userProfile.portfolioUrl}
-                    </Button>
+                    <input
+                      className="border rounded px-2 py-1 w-full"
+                      placeholder="Portfolio URL"
+                      value={editData?.portfolioUrl || ''}
+                      onChange={e => handleEditChange('portfolioUrl', e.target.value)}
+                    />
                   </div>
-                )}
-                {!userProfile.githubUrl && !userProfile.linkedinUrl && !userProfile.portfolioUrl && (
-                  <p className="text-gray-500">No social media links added yet</p>
-                )}
-              </div>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {userProfile.githubUrl && (
+                    <div className="flex items-center space-x-3">
+                      <span className="text-sm font-medium text-gray-700">GitHub:</span>
+                      <Button
+                        onClick={() => window.open(userProfile.githubUrl, '_blank')}
+                        variant="link"
+                        className="p-0 h-auto text-blue-600"
+                      >
+                        {userProfile.githubUrl}
+                      </Button>
+                    </div>
+                  )}
+                  {userProfile.linkedinUrl && (
+                    <div className="flex items-center space-x-3">
+                      <span className="text-sm font-medium text-gray-700">LinkedIn:</span>
+                      <Button
+                        onClick={() => window.open(userProfile.linkedinUrl, '_blank')}
+                        variant="link"
+                        className="p-0 h-auto text-blue-600"
+                      >
+                        {userProfile.linkedinUrl}
+                      </Button>
+                    </div>
+                  )}
+                  {userProfile.portfolioUrl && (
+                    <div className="flex items-center space-x-3">
+                      <span className="text-sm font-medium text-gray-700">Portfolio:</span>
+                      <Button
+                        onClick={() => window.open(userProfile.portfolioUrl, '_blank')}
+                        variant="link"
+                        className="p-0 h-auto text-blue-600"
+                      >
+                        {userProfile.portfolioUrl}
+                      </Button>
+                    </div>
+                  )}
+                  {!userProfile.githubUrl && !userProfile.linkedinUrl && !userProfile.portfolioUrl && (
+                    <p className="text-gray-500">No social media links added yet</p>
+                  )}
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
+
+        {/* Bottom Action Buttons - Only show in edit mode */}
+        {editMode && (
+          <div className="flex justify-center gap-4 py-8 border-t bg-white sticky bottom-0 z-10 shadow-lg">
+            <Button 
+              onClick={saveEdit} 
+              disabled={resumeUploading}
+              className="px-8 py-2 bg-green-600 hover:bg-green-700 text-white"
+            >
+              {resumeUploading ? 'Processing...' : 'Save Changes'}
+            </Button>
+            <Button 
+              onClick={cancelEdit} 
+              variant="outline"
+              className="px-8 py-2 border-gray-300 text-gray-700 hover:bg-gray-50"
+            >
+              Cancel
+            </Button>
+          </div>
+        )}
       </main>
     </div>
   );

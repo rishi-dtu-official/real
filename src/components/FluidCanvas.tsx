@@ -55,13 +55,13 @@ const FluidCanvas = () => {
       return value;
     }
     
-    // Enhanced color palette for vibrant paint colors
+    // Enhanced color palette for vibrant bluish paint colors
     vec3 palette(float t) {
-      // Create vibrant, paint-like colors
-      vec3 a = vec3(0.8, 0.5, 0.4);
-      vec3 b = vec3(0.2, 0.4, 0.2);
-      vec3 c = vec3(2.0, 1.0, 1.0);
-      vec3 d = vec3(0.0, 0.25, 0.25);
+      // Create vibrant, bluish paint-like colors
+      vec3 a = vec3(0.3, 0.5, 0.8);
+      vec3 b = vec3(0.2, 0.3, 0.5);
+      vec3 c = vec3(1.0, 1.0, 2.0);
+      vec3 d = vec3(0.25, 0.4, 0.1);
       
       return a + b * cos(6.28318 * (c * t + d));
     }

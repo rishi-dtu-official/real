@@ -1,3 +1,4 @@
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Check, X } from "lucide-react";
 import { motion } from "framer-motion";
@@ -120,9 +121,8 @@ const ComparisonSection = () => {
 
             {/* Feature Rows */}
             {features.map((feature, index) => (
-              <>
+              <React.Fragment key={`feature-${index}`}>
                 <motion.div 
-                  key={`${index}-name`} 
                   className="py-4 text-foreground"
                   variants={{
                     hidden: { opacity: 0, x: -20 },
@@ -177,7 +177,7 @@ const ComparisonSection = () => {
                     <X className="w-5 h-5 text-muted-foreground" />
                   )}
                 </motion.div>
-              </>
+              </React.Fragment>
             ))}
           </motion.div>
         </motion.div>

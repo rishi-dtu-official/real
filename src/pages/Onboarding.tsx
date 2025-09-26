@@ -3,7 +3,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../lib/firebase';
-import { uploadResume } from '../lib/uploadUtils';
+import { parseResume, extractResumeInfo } from '../lib/uploadUtils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import FirebaseStorageSetup from '../components/FirebaseStorageSetup';
+
 
 const Onboarding = () => {
   const [user, setUser] = useState(null);
@@ -33,7 +33,16 @@ const Onboarding = () => {
     workExperience: [{ company: '', role: '', duration: '', description: '' }],
     education: [{ degree: '', school: '', year: '' }],
     projects: [{ title: '', description: '', techStack: [], link: '' }],
-    resumeUrl: ''
+    // Resume parsing data instead of file URL
+    resumeData: {
+      extractedText: '',
+      fileName: '',
+      fileSize: 0,
+      fileType: '',
+      parsedAt: '',
+      wordCount: 0,
+      extractedSections: {}
+    }
   });
 
   const steps = [
@@ -118,27 +127,32 @@ const Onboarding = () => {
     setResumeUploading(true);
 
     try {
-      const uploadResult = await uploadResume(
-        file, 
-        user.uid,
+      const parseResult = await parseResume(
+        file,
         (progress) => {
-          // You can add progress tracking here if needed
-          console.log('Upload progress:', progress + '%');
+          console.log('Parsing progress:', progress + '%');
         }
       );
       
+      // Extract structured information from the parsed text
+      const extractedInfo = extractResumeInfo(parseResult.extractedText);
+      
       setFormData(prev => ({
         ...prev,
-        resumeUrl: uploadResult.url,
-        resumeFileName: uploadResult.originalName,
-        resumeSize: uploadResult.size,
-        resumeType: uploadResult.type
+        resumeData: {
+          ...parseResult,
+          extractedSections: extractedInfo.extractedSections
+        },
+        // Auto-fill form fields with extracted information if available
+        email: extractedInfo.extractedSections.email || prev.email,
+        phone: extractedInfo.extractedSections.phone || prev.phone,
       }));
 
-      alert('Resume uploaded successfully!');
+      alert('Resume parsed successfully! ' + 
+            `Extracted ${parseResult.wordCount} words from your resume.`);
     } catch (error) {
-      console.error('Error uploading resume:', error);
-      alert(`Error uploading resume: ${error.message}`);
+      console.error('Error parsing resume:', error);
+      alert(`Error parsing resume: ${error.message}`);
     }
     setResumeUploading(false);
   };
@@ -252,7 +266,6 @@ const Onboarding = () => {
             {/* Step 1: Resume Upload */}
             {currentStep === 1 && (
               <div className="space-y-4">
-                <FirebaseStorageSetup />
                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
                   <div className="mb-4">
                     <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
@@ -279,9 +292,21 @@ const Onboarding = () => {
                       <p className="text-sm text-green-600 mt-2">Uploading...</p>
                     </div>
                   )}
-                  {formData.resumeUrl && (
-                    <div className="mt-4">
-                      <Badge className="bg-green-100 text-green-800">✅ Resume Uploaded</Badge>
+                  {formData.resumeData.extractedText && (
+                    <div className="mt-4 space-y-2">
+                      <Badge className="bg-green-100 text-green-800">✅ Resume Parsed</Badge>
+                      <div className="text-xs text-gray-600">
+                        <p>📄 {formData.resumeData.fileName}</p>
+                        <p>📊 {formData.resumeData.wordCount} words extracted</p>
+                        {formData.resumeData.extractedSections && 
+                         (formData.resumeData.extractedSections as any).email && (
+                          <p>📧 Found email: {(formData.resumeData.extractedSections as any).email}</p>
+                        )}
+                        {formData.resumeData.extractedSections && 
+                         (formData.resumeData.extractedSections as any).phone && (
+                          <p>📞 Found phone: {(formData.resumeData.extractedSections as any).phone}</p>
+                        )}
+                      </div>
                     </div>
                   )}
                 </div>
@@ -563,7 +588,7 @@ const Onboarding = () => {
                       <div><strong>Name:</strong> {formData.name}</div>
                       <div><strong>Email:</strong> {formData.email}</div>
                       <div><strong>Phone:</strong> {formData.phone || 'Not provided'}</div>
-                      <div><strong>Resume:</strong> {formData.resumeUrl ? '✅ Uploaded' : '❌ Not uploaded'}</div>
+                      <div><strong>Resume:</strong> {formData.resumeData.extractedText ? '✅ Parsed' : '❌ Not uploaded'}</div>
                     </div>
                   </CardContent>
                 </Card>
@@ -637,7 +662,7 @@ const Onboarding = () => {
               {currentStep < steps.length ? (
                 <Button
                   onClick={nextStep}
-                  disabled={currentStep === 1 && !formData.resumeUrl}
+                  disabled={currentStep === 1 && !formData.resumeData.extractedText}
                 >
                   Next
                 </Button>

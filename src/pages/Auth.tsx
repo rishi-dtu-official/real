@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import GoogleLoginButton from "../components/GoogleLoginButton";
-import FirebaseSetupHelper from "../components/FirebaseSetupHelper";
 
 const Auth = () => {
   return (
@@ -103,8 +102,6 @@ const Auth = () => {
             <h2 className="text-3xl font-bold text-gray-900 mb-8">
               Welcome to <span className="text-green-600">Fornix</span>
             </h2>
-            
-            <FirebaseSetupHelper />
             
             <div className="mt-8">
               <GoogleLoginButton />
