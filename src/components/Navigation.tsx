@@ -21,7 +21,7 @@ const Navigation = () => {
       {/* Static Logo - Only visible on Hero Section, doesn't follow scroll */}
       <div className="absolute top-4 left-6 z-50">
         <div className="text-4xl font-bold text-foreground">
-          Fornix
+          Fornix AI
         </div>
       </div>
 

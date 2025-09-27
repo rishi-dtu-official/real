@@ -56,12 +56,100 @@ const HeroSection = () => {
         </motion.div>
         
         <motion.h1 
-          className="text-6xl md:text-8xl font-bold mb-8 leading-tight"
+          className="text-6xl md:text-8xl font-bold mb-8 leading-tight font-mono"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.5 }}
         >
-          Get Work Effortlessly.
+          <motion.span
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 1 }}
+          >
+            Get Work{" "}
+          </motion.span>
+          <motion.span className="relative inline-block">
+            <motion.span
+              className="text-black font-black tracking-tight"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.1, delay: 1.8 }}
+            >
+              {/* Typewriter effect for each letter */}
+              {"Effortlessly".split("").map((char, index) => (
+                <motion.span
+                  key={index}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ 
+                    opacity: 1, 
+                    scale: 1,
+                    y: [0, -5, 0]
+                  }}
+                  transition={{ 
+                    opacity: { duration: 0.05, delay: 1.8 + (index * 0.08) },
+                    scale: { duration: 0.1, delay: 1.8 + (index * 0.08) },
+                    y: { 
+                      duration: 0.3, 
+                      delay: 1.8 + (index * 0.08),
+                      ease: "easeOut"
+                    }
+                  }}
+                  className="inline-block"
+                >
+                  {char}
+                </motion.span>
+              ))}
+            </motion.span>
+            {/* Typing cursor */}
+            <motion.span
+              className="text-black ml-1 font-thin"
+              initial={{ opacity: 0 }}
+              animate={{ 
+                opacity: [0, 1, 1, 0],
+                scale: [1, 1.1, 1]
+              }}
+              transition={{
+                opacity: {
+                  duration: 0.8,
+                  repeat: Infinity,
+                  repeatType: "loop",
+                  delay: 2.5
+                },
+                scale: {
+                  duration: 0.8,
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                  delay: 2.5
+                }
+              }}
+            >
+              |
+            </motion.span>
+            {/* Final period */}
+            <motion.span
+              className="text-white"
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ 
+                opacity: 1, 
+                scale: [0, 1.2, 1],
+                rotate: [0, 5, 0]
+              }}
+              transition={{ 
+                opacity: { duration: 0.3, delay: 3.5 },
+                scale: { 
+                  duration: 0.4, 
+                  delay: 3.5,
+                  ease: "backOut"
+                },
+                rotate: { 
+                  duration: 0.4, 
+                  delay: 3.5 
+                }
+              }}
+            >
+              
+            </motion.span>
+          </motion.span>
         </motion.h1>
         <motion.p 
           className="text-xl md:text-2xl mb-12 text-white/90 max-w-2xl mx-auto"

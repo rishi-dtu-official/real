@@ -30,7 +30,7 @@ const DataVisualizationSection = () => {
   ];
 
   const investors = [
-    { name: "Y Combinator", logo: "YC" },
+    { name: "AWS for Starups", logo: "AWS" },
     { name: "Google Ventures", logo: "GV" }
   ];
 
