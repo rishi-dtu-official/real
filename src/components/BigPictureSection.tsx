@@ -2,8 +2,10 @@ import geometricBlocks from "@/assets/geometric-blocks.jpg";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import { useNavigate } from "react-router-dom";
 
 const BigPictureSection = () => {
+  const navigate = useNavigate();
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -100,7 +102,11 @@ const BigPictureSection = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Button variant="outline" className="rounded-full bg-sage text-sage-foreground border-sage hover:bg-sage/80">
+              <Button 
+                variant="outline" 
+                className="rounded-full bg-sage text-sage-foreground border-sage hover:bg-sage/80"
+                onClick={() => navigate('/submit-request')}
+              >
                 Contact Us
               </Button>
             </motion.div>

@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useActiveSection } from "@/hooks/useActiveSection";
+import { useNavigate } from "react-router-dom";
 
 const NAV_LINKS = [
   { id: "map-success", label: "Home" },
@@ -13,6 +14,8 @@ const NAV_LINKS = [
 
 const Navigation = () => {
   const active = useActiveSection();
+  const navigate = useNavigate();
+  
   return (
     <>
       {/* Static Logo - Only visible on Hero Section, doesn't follow scroll */}
@@ -65,7 +68,12 @@ const Navigation = () => {
           className="bg-white/20 backdrop-blur-md rounded-full shadow-lg border border-black/20"
         >
           <div className="p-2">
-            <Button variant="default" size="sm" className="rounded-full px-6">
+            <Button 
+              variant="default" 
+              size="sm" 
+              className="rounded-full px-6"
+              onClick={() => navigate('/auth')}
+            >
               Looking for Work
             </Button>
           </div>

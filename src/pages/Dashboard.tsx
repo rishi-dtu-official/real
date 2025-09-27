@@ -6,6 +6,7 @@ import { auth, db } from '../lib/firebase';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import logo from '@/assets/G6SIcs01.svg';
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
@@ -171,9 +172,11 @@ const Dashboard = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">F</span>
-              </div>
+              <img 
+                src={logo} 
+                alt="Fornix Logo" 
+                className="h-8 w-auto"
+              />
               <span className="text-xl font-bold text-gray-900">Fornix Dashboard</span>
             </div>
             <div className="flex gap-2">

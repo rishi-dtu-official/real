@@ -1,113 +1,78 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import GoogleLoginButton from "../components/GoogleLoginButton";
+import { useNavigate } from "react-router-dom";
+import logo from "@/assets/G6SIcs01.svg";
 
 const Auth = () => {
+  const navigate = useNavigate();
+
   return (
     <div 
-      className="min-h-screen flex relative"
+      className="min-h-screen flex flex-col items-center justify-center relative px-6"
       style={{
-        background: 'linear-gradient(90deg, #10b981 0%, #059669 45%, rgba(16, 185, 129, 0.8) 60%, rgba(249, 250, 251, 0.9) 80%, #f9fafb 100%)'
+        background: 'linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%)'
       }}
     >
-      {/* Left Section - Green Gradient with Content */}
+      {/* Logo */}
+      <div className="absolute top-8 left-8 z-20">
+        <img 
+          src={logo} 
+          alt="Fornix Logo" 
+          className="h-20 w-auto"
+        />
+      </div>
+
+      {/* Main Content - Centered */}
       <motion.div 
-        className="flex-1 relative overflow-hidden"
-        initial={{ x: -100, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
+        className="w-full max-w-md relative z-10 text-center"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        {/* Logo */}
-        <div className="absolute top-8 left-8 z-20">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
-              <span className="text-green-600 font-bold text-lg">F</span>
-            </div>
-            <span className="text-white text-2xl font-bold">Fornix</span>
+        {/* Main Heading */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-6 leading-tight">
+            Find Your Next<br />
+            <span className="text-white/90">Opportunity</span>
+          </h1>
+        </motion.div>
+
+        {/* Welcome Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="mb-8"
+        >
+          <h2 className="text-xl font-semibold text-white/90 mb-6">
+           Join Fornix
+          </h2>
+          
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+            <GoogleLoginButton />
           </div>
-        </div>
-
-        {/* Main Content */}
-        <div className="flex flex-col justify-center h-full px-16 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-          >
-            <h1 className="text-5xl font-bold text-white mb-6 leading-tight">
-              Ensure a Fast and<br />
-              <span className="text-white/90">Successful Journey</span>{" "}
-              <span className="text-white/80">to<br />Your Next Career Move</span>
-            </h1>
-          </motion.div>
-
-          {/* Statistics */}
-          <motion.div 
-            className="space-y-6 mt-12"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-          >
-            <div className="flex items-center space-x-4">
-              <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                <span className="text-white text-sm">✉</span>
-              </div>
-              <span className="text-white text-lg">
-                <strong>2X</strong> More Qualified Job Matches
-              </span>
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                <span className="text-white text-sm">⏰</span>
-              </div>
-              <span className="text-white text-lg">
-                <strong>60%</strong> Time Savings in Job Searches
-              </span>
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                <span className="text-white text-sm">📞</span>
-              </div>
-              <span className="text-white text-lg">
-                <strong>50%</strong> More Interview Invites
-              </span>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Decorative Background Elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-20 -left-20 w-80 h-80 bg-white/5 rounded-full"></div>
-          <div className="absolute top-1/3 -right-20 w-64 h-64 bg-white/5 rounded-full"></div>
-          <div className="absolute -bottom-20 left-1/3 w-96 h-96 bg-white/5 rounded-full"></div>
-        </div>
+        </motion.div>
       </motion.div>
 
-      {/* Right Section - Auth Form */}
-      <motion.div 
-        className="flex-1 flex items-center justify-center px-8 relative"
-        initial={{ x: 100, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
+      {/* Looking for Talent Button - Bottom Center */}
+      <motion.div
+        className="absolute bottom-8 left-2/5 transform -translate-x-1/2 z-20"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.6 }}
       >
-        
-        <div className="w-full max-w-md relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-          >
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">
-              Welcome to <span className="text-green-600">Fornix</span>
-            </h2>
-            
-            <div className="mt-8">
-              <GoogleLoginButton />
-            </div>
-          </motion.div>
-        </div>
+        <Button
+          variant="ghost"
+          className="text-sm text-white/80 hover:text-white hover:bg-white/10 transition-colors duration-200 backdrop-blur-sm border border-white/20"
+          onClick={() => navigate('/submit-request')}
+        >
+          Looking for Talent? Click here
+        </Button>
       </motion.div>
     </div>
   );

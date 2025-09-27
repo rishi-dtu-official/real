@@ -1,0 +1,24 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": "vite",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "functions": {
+    "api/request-demo.js": {
+      "runtime": "nodejs18.x"
+    },
+    "api/send-hiring-request.js": {
+      "runtime": "nodejs18.x"
+    },
+    "api/send-referral-email.js": {
+      "runtime": "nodejs18.x"
+    }
+  }
+}

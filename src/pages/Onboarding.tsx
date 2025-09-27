@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import logo from '@/assets/G6SIcs01.svg';
 
 
 const Onboarding = () => {
@@ -33,7 +34,7 @@ const Onboarding = () => {
     portfolioUrl: '',
     workExperience: [{ company: '', role: '', duration: '', description: '' }],
     education: [{ degree: '', school: '', year: '' }],
-    projects: [{ title: '', description: '', techStack: [], link: '' }],
+    projects: [{ title: '', description: '', techStack: [], techStackString: '', link: '' }],
     // Referral information
     referral: {
       name: '',
@@ -55,8 +56,8 @@ const Onboarding = () => {
     { number: 1, title: 'Resume Upload', description: 'Upload your resume' },
     { number: 2, title: 'Personal Details', description: 'Basic information' },
     { number: 3, title: 'Experience & Education', description: 'Professional background' },
-    { number: 4, title: 'Projects', description: 'Showcase your work' },
-    { number: 5, title: 'Referral', description: 'Add a referral *' },
+    { number: 4, title: 'Projects', description: 'Showcase your top 2 Projects' },
+    { number: 5, title: 'Referral', description: 'Refer Your Friends *' },
     { number: 6, title: 'Review & Submit', description: 'Confirm your details' }
   ];
 
@@ -164,8 +165,12 @@ const Onboarding = () => {
     setResumeUploading(false);
   };
 
-  const handleTechStackChange = (projectIndex, techStack) => {
-    const techArray = techStack.split(',').map(tech => tech.trim()).filter(tech => tech);
+  const handleTechStackChange = (projectIndex, value) => {
+    // Store the raw string value to allow typing commas
+    handleArrayChange('projects', projectIndex, 'techStackString', value);
+    
+    // Also update the techStack array for processing
+    const techArray = value.split(',').map(tech => tech.trim()).filter(tech => tech);
     handleArrayChange('projects', projectIndex, 'techStack', techArray);
   };
 
@@ -260,9 +265,11 @@ const Onboarding = () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">F</span>
-              </div>
+              <img 
+                src={logo} 
+                alt="Fornix Logo" 
+                className="h-8 w-auto"
+              />
               <span className="text-xl font-bold text-gray-900">Profile Setup</span>
             </div>
             <div className="text-sm text-gray-500">
@@ -333,17 +340,17 @@ const Onboarding = () => {
                   )}
                   {formData.resumeData.extractedText && (
                     <div className="mt-4 space-y-2">
-                      <Badge className="bg-green-100 text-green-800">✅ Resume Parsed</Badge>
+                      <Badge className="bg-green-100 text-green-800">Resume Parsed</Badge>
                       <div className="text-xs text-gray-600">
-                        <p>📄 {formData.resumeData.fileName}</p>
-                        <p>📊 {formData.resumeData.wordCount} words extracted</p>
+                        <p>{formData.resumeData.fileName}</p>
+                        <p>{formData.resumeData.wordCount} words extracted</p>
                         {formData.resumeData.extractedSections && 
                          (formData.resumeData.extractedSections as any).email && (
-                          <p>📧 Found email: {(formData.resumeData.extractedSections as any).email}</p>
+                          <p>Found email: {(formData.resumeData.extractedSections as any).email}</p>
                         )}
                         {formData.resumeData.extractedSections && 
                          (formData.resumeData.extractedSections as any).phone && (
-                          <p>📞 Found phone: {(formData.resumeData.extractedSections as any).phone}</p>
+                          <p> phone: {(formData.resumeData.extractedSections as any).phone}</p>
                         )}
                       </div>
                     </div>
@@ -454,7 +461,7 @@ const Onboarding = () => {
                           <Input
                             value={exp.duration}
                             onChange={(e) => handleArrayChange('workExperience', index, 'duration', e.target.value)}
-                            placeholder="Jan 2020 - Present"
+                            placeholder="MM/YYYY - MM/YYYY or Present"
                           />
                         </div>
                         <div className="mb-4">
@@ -462,7 +469,7 @@ const Onboarding = () => {
                           <Textarea
                             value={exp.description}
                             onChange={(e) => handleArrayChange('workExperience', index, 'description', e.target.value)}
-                            placeholder="Describe your role and achievements..."
+                            placeholder="Describe your Contrubutions in bullet points"
                             rows={3}
                           />
                         </div>
@@ -483,7 +490,7 @@ const Onboarding = () => {
                 {/* Education */}
                 <div>
                   <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-semibold">Education</h3>
+                    <h3 className="text-lg font-semibold">University</h3>
                     <Button
                       onClick={() => addArrayItem('education', { degree: '', school: '', year: '' })}
                       variant="outline"
@@ -501,15 +508,15 @@ const Onboarding = () => {
                             <Input
                               value={edu.degree}
                               onChange={(e) => handleArrayChange('education', index, 'degree', e.target.value)}
-                              placeholder="Bachelor of Science in Computer Science"
+                              placeholder="Bachelor of Teachnology in Computer Science"
                             />
                           </div>
                           <div>
-                            <Label>School</Label>
+                            <Label>University/College Name</Label>
                             <Input
                               value={edu.school}
                               onChange={(e) => handleArrayChange('education', index, 'school', e.target.value)}
-                              placeholder="University Name"
+                              placeholder="Indian Institute of Technology Delhi"
                             />
                           </div>
                         </div>
@@ -518,7 +525,7 @@ const Onboarding = () => {
                           <Input
                             value={edu.year}
                             onChange={(e) => handleArrayChange('education', index, 'year', e.target.value)}
-                            placeholder="2024"
+                            placeholder="yyyy-yyyy"
                           />
                         </div>
                         {formData.education.length > 1 && (
@@ -543,7 +550,7 @@ const Onboarding = () => {
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg font-semibold">Projects</h3>
                   <Button
-                    onClick={() => addArrayItem('projects', { title: '', description: '', techStack: [], link: '' })}
+                    onClick={() => addArrayItem('projects', { title: '', description: '', techStack: [], techStackString: '', link: '' })}
                     variant="outline"
                     size="sm"
                   >
@@ -559,7 +566,7 @@ const Onboarding = () => {
                           <Input
                             value={project.title}
                             onChange={(e) => handleArrayChange('projects', index, 'title', e.target.value)}
-                            placeholder="My Awesome Project"
+                            placeholder="Eg: Diarization Pipeline"
                           />
                         </div>
                         <div>
@@ -567,7 +574,7 @@ const Onboarding = () => {
                           <Input
                             value={project.link}
                             onChange={(e) => handleArrayChange('projects', index, 'link', e.target.value)}
-                            placeholder="https://github.com/user/project"
+                            placeholder="Github or Live Link"
                           />
                         </div>
                       </div>
@@ -576,14 +583,14 @@ const Onboarding = () => {
                         <Textarea
                           value={project.description}
                           onChange={(e) => handleArrayChange('projects', index, 'description', e.target.value)}
-                          placeholder="Describe your project..."
+                          placeholder="Describe your project in points"
                           rows={3}
                         />
                       </div>
                       <div className="mb-4">
-                        <Label>Tech Stack (comma-separated)</Label>
+                        <Label>Tech Stack Used</Label>
                         <Input
-                          value={project.techStack.join(', ')}
+                          value={project.techStackString || project.techStack.join(', ')}
                           onChange={(e) => handleTechStackChange(index, e.target.value)}
                           placeholder="React, Node.js, MongoDB, AWS"
                         />
@@ -617,7 +624,7 @@ const Onboarding = () => {
               <div className="space-y-6">
                 <div className="text-center mb-6">
                   <h3 className="text-lg font-semibold mb-2">Add a Referral *</h3>
-                  <p className="text-gray-600">Know someone at a company you're interested in? Add their details here to help with your job search.</p>
+                  <p className="text-gray-600">Know someone who is looking for Job/Internship/Paid Projects? Refer them. Sharing is Caring .</p>
                 </div>
                 
                 <Card>
@@ -632,7 +639,7 @@ const Onboarding = () => {
                           id="referral-name"
                           value={formData.referral.name}
                           onChange={(e) => handleInputChange('referral', { ...formData.referral, name: e.target.value })}
-                          placeholder="John Smith"
+                          placeholder="David Putra"
                           required
                         />
                       </div>
@@ -643,7 +650,7 @@ const Onboarding = () => {
                           type="email"
                           value={formData.referral.email}
                           onChange={(e) => handleInputChange('referral', { ...formData.referral, email: e.target.value })}
-                          placeholder="john.smith@company.com"
+                          placeholder="friend@gmail.com"
                           required
                         />
                       </div>
@@ -658,9 +665,14 @@ const Onboarding = () => {
                         <div>
                           <h4 className="text-sm font-medium text-blue-900 mb-1">Why add a referral?</h4>
                           <ul className="text-sm text-blue-800 space-y-1">
-                            <li>• Increase your chances of getting noticed by employers</li>
-                            <li>• Get insider insights about company culture and opportunities</li>
-                            <li>• Skip the initial screening process in many cases</li>
+                            <li>• Help our platform reach more users and increase overall discoverability for yourself and others</li>
+                      
+                            <li>• You will be eligible for background verification after successful referral</li>
+
+                            <li>• Help our platform get best Talent.</li>
+                            
+
+                            
                           </ul>
                         </div>
                       </div>

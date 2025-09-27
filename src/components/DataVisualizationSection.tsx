@@ -10,20 +10,20 @@ const DataVisualizationSection = () => {
 
   const stats = [
     {
-      number: "12M+",
-      label: "Jobs processed monthly",
+      number: "1K+",
+      label: "Jobs Seekers Registered",
       bgColor: "bg-gray-100",
       dotColor: "text-gray-400"
     },
     {
-      number: "12K+",
-      label: "Happy Developers",
+      number: "50+",
+      label: "Happy Recruiters",
       bgColor: "bg-yellow-300",
       dotColor: "text-yellow-600"
     },
     {
-      number: "800+",
-      label: "Organizations saving time",
+      number: "120+",
+      label: "Got Work",
       bgColor: "bg-gray-100",
       dotColor: "text-gray-400"
     }
@@ -74,7 +74,7 @@ const DataVisualizationSection = () => {
               animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.8, delay: 0.3 }}
             >
-              Including angels like Kelsey Hightower, Spencer Kimball, and NFL athlete Kevin Beachum of the Arizona Cardinals.
+              Our Team includes experts in AI, recruitment, and Talent Management.
             </motion.p>
 
             {/* Investors */}
@@ -105,7 +105,10 @@ const DataVisualizationSection = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Button className="bg-[#82c341] hover:bg-green-500 text-black font-semibold px-8 py-3 rounded-full">
+              <Button 
+                className="bg-[#82c341] hover:bg-green-500 text-black font-semibold px-8 py-3 rounded-full"
+                onClick={() => window.open('https://www.linkedin.com/company/fornixai/', '_blank')}
+              >
                 FIND US ON LINKEDIN
               </Button>
             </motion.div>
