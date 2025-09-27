@@ -234,7 +234,7 @@ export default async function handler(req, res) {
           <div class="footer">
             <p><strong>Fornix Hiring Platform</strong></p>
             <p>This request was submitted on ${new Date().toLocaleString()}</p>
-            <p>For questions about this request, contact our support team at contactus@fornixai.tech</p>
+            <p>For questions about this request, contact our support team at support@fornixai.tech</p>
             <p>© 2025 Fornix. All rights reserved.</p>
           </div>
         </div>
@@ -264,12 +264,12 @@ This request was submitted on ${new Date().toLocaleString()}.
 
 ---
 Fornix Hiring Platform
-For questions, contact: contactus@fornixai.tech
+For questions, contact: support@fornixai.tech
     `;
 
     // Mail options
     const mailOptions = {
-      from: '"Fornix - Hiring Platform" <contactus@fornixai.tech>',
+      from: '"Fornix - Hiring Platform" <support@fornixai.tech>',
       to: 'rishirajprajapati22@gmail.com',
       cc: 'support@fornixai.tech', // Copy to company email
       subject: `🚨 New Hiring Request: ${jobPosition} at ${organisation}`,
@@ -370,7 +370,7 @@ For questions, contact: contactus@fornixai.tech
           
           <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; color: #6b7280; font-size: 14px;">
             <p>Fornix - Connecting Great Talent with Great Opportunities</p>
-            <p>contactus@fornixai.tech</p>
+            <p>support@fornixai.tech</p>
           </div>
         </div>
       </body>
@@ -379,7 +379,7 @@ For questions, contact: contactus@fornixai.tech
 
     // Send confirmation email to employer
     const confirmationOptions = {
-      from: '"Fornix Team" <contactus@fornixai.tech>',
+      from: '"Fornix Team" <support@fornixai.tech>',
       to: contactEmail,
       subject: `✅ Your Hiring Request for ${jobPosition} has been received`,
       html: confirmationHtml

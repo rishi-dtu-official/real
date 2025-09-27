@@ -273,13 +273,13 @@ Reply directly to: ${email}
 
 ---
 Fornix Lead Generation System
-For questions, contact: contactus@fornixai.tech
+For questions, contact: support@fornixai.tech
     `;
 
     // Mail options
     const mailOptions = {
-      from: '"Fornix - Demo Requests" <contactus@fornixai.tech>',
-      to: 'contactus@fornixai.tech',
+      from: '"Fornix - Demo Requests" <support@fornixai.tech>',
+      to: 'support@fornixai.tech',
       subject: `🎯 New Demo Request from ${email}`,
       text: textContent,
       html: htmlContent,
@@ -379,7 +379,7 @@ For questions, contact: contactus@fornixai.tech
             <li>Pricing and implementation timeline</li>
           </ul>
           
-          <p>If you have any urgent questions or need to reach us immediately, feel free to reply to this email or contact us at contactus@fornixai.tech.</p>
+          <p>If you have any urgent questions or need to reach us immediately, feel free to reply to this email or contact us at support@fornixai.tech.</p>
           
           <p>Looking forward to connecting with you!</p>
           
@@ -388,7 +388,7 @@ For questions, contact: contactus@fornixai.tech
           
           <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; color: #6b7280; font-size: 14px;">
             <p>Fornix - Connecting Great Talent with Great Opportunities</p>
-            <p>contactus@fornixai.tech</p>
+            <p>support@fornixai.tech</p>
           </div>
         </div>
       </body>
@@ -397,7 +397,7 @@ For questions, contact: contactus@fornixai.tech
 
     // Send confirmation email to prospect
     const confirmationOptions = {
-      from: '"Fornix Team" <contactus@fornixai.tech>',
+      from: '"Fornix Team" <support@fornixai.tech>',
       to: email,
       subject: '🎯 Your Fornix Demo Request - We\'ll be in touch soon!',
       html: confirmationHtml
