@@ -20,6 +20,7 @@ const Onboarding = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [resumeFile, setResumeFile] = useState(null);
   const [resumeUploading, setResumeUploading] = useState(false);
+  const [sendingReferralEmail, setSendingReferralEmail] = useState(false);
   const navigate = useNavigate();
 
   // Form data state
@@ -33,6 +34,11 @@ const Onboarding = () => {
     workExperience: [{ company: '', role: '', duration: '', description: '' }],
     education: [{ degree: '', school: '', year: '' }],
     projects: [{ title: '', description: '', techStack: [], link: '' }],
+    // Referral information
+    referral: {
+      name: '',
+      email: ''
+    },
     // Resume parsing data instead of file URL
     resumeData: {
       extractedText: '',
@@ -50,7 +56,8 @@ const Onboarding = () => {
     { number: 2, title: 'Personal Details', description: 'Basic information' },
     { number: 3, title: 'Experience & Education', description: 'Professional background' },
     { number: 4, title: 'Projects', description: 'Showcase your work' },
-    { number: 5, title: 'Review & Submit', description: 'Confirm your details' }
+    { number: 5, title: 'Referral', description: 'Add a referral *' },
+    { number: 6, title: 'Review & Submit', description: 'Confirm your details' }
   ];
 
   useEffect(() => {
@@ -185,8 +192,40 @@ const Onboarding = () => {
     setIsSubmitting(false);
   };
 
-  const nextStep = () => {
+  const nextStep = async () => {
     if (currentStep < steps.length) {
+      // If moving from referral step (step 5), send referral email
+      if (currentStep === 5 && formData.referral.name && formData.referral.email) {
+        setSendingReferralEmail(true);
+        try {
+          const response = await fetch('/api/send-referral-email', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              referralName: formData.referral.name,
+              referralEmail: formData.referral.email,
+              userName: formData.name,
+              userEmail: formData.email
+            }),
+          });
+
+          if (response.ok) {
+            console.log('Referral email sent successfully');
+            alert('Referral notification sent successfully to ' + formData.referral.name + '!');
+          } else {
+            console.error('Failed to send referral email');
+            alert('Failed to send referral notification. Continuing with setup...');
+          }
+        } catch (error) {
+          console.error('Error sending referral email:', error);
+          alert('Error sending referral notification. Continuing with setup...');
+        } finally {
+          setSendingReferralEmail(false);
+        }
+      }
+      
       setCurrentStep(currentStep + 1);
     }
   };
@@ -573,8 +612,78 @@ const Onboarding = () => {
               </div>
             )}
 
-            {/* Step 5: Review & Submit */}
+            {/* Step 5: Referral */}
             {currentStep === 5 && (
+              <div className="space-y-6">
+                <div className="text-center mb-6">
+                  <h3 className="text-lg font-semibold mb-2">Add a Referral *</h3>
+                  <p className="text-gray-600">Know someone at a company you're interested in? Add their details here to help with your job search.</p>
+                </div>
+                
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-base">Referral Information</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <Label htmlFor="referral-name">Referral Name *</Label>
+                        <Input
+                          id="referral-name"
+                          value={formData.referral.name}
+                          onChange={(e) => handleInputChange('referral', { ...formData.referral, name: e.target.value })}
+                          placeholder="John Smith"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="referral-email">Referral Email *</Label>
+                        <Input
+                          id="referral-email"
+                          type="email"
+                          value={formData.referral.email}
+                          onChange={(e) => handleInputChange('referral', { ...formData.referral, email: e.target.value })}
+                          placeholder="john.smith@company.com"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+                      <div className="flex items-start space-x-3">
+                        <div className="w-5 h-5 text-blue-600 mt-0.5">
+                          <svg fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-medium text-blue-900 mb-1">Why add a referral?</h4>
+                          <ul className="text-sm text-blue-800 space-y-1">
+                            <li>• Increase your chances of getting noticed by employers</li>
+                            <li>• Get insider insights about company culture and opportunities</li>
+                            <li>• Skip the initial screening process in many cases</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {sendingReferralEmail && (
+                      <div className="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-5 h-5 border-2 border-green-600 border-t-transparent rounded-full animate-spin"></div>
+                          <div>
+                            <p className="text-sm font-medium text-green-800">Sending referral notification...</p>
+                            <p className="text-xs text-green-600">We're notifying {formData.referral.name} about your referral request.</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+
+            {/* Step 6: Review & Submit */}
+            {currentStep === 6 && (
               <div className="space-y-6">
                 <h3 className="text-lg font-semibold">Review Your Information</h3>
                 
@@ -646,6 +755,19 @@ const Onboarding = () => {
                     ))}
                   </CardContent>
                 </Card>
+
+                {/* Referral Review */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-base">Referral Information</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      <div><strong>Name:</strong> {formData.referral.name}</div>
+                      <div><strong>Email:</strong> {formData.referral.email}</div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             )}
 
@@ -662,14 +784,18 @@ const Onboarding = () => {
               {currentStep < steps.length ? (
                 <Button
                   onClick={nextStep}
-                  disabled={currentStep === 1 && !formData.resumeData.extractedText}
+                  disabled={
+                    (currentStep === 1 && !formData.resumeData.extractedText) ||
+                    (currentStep === 5 && (!formData.referral.name || !formData.referral.email)) ||
+                    sendingReferralEmail
+                  }
                 >
-                  Next
+                  {sendingReferralEmail ? 'Sending Email...' : 'Next'}
                 </Button>
               ) : (
                 <Button
                   onClick={handleSubmit}
-                  disabled={isSubmitting || !formData.name || !formData.email}
+                  disabled={isSubmitting || !formData.name || !formData.email || !formData.referral.name || !formData.referral.email}
                 >
                   {isSubmitting ? 'Saving...' : 'Complete Setup'}
                 </Button>

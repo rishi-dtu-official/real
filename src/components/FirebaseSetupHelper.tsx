@@ -7,7 +7,7 @@ const FirebaseSetupHelper = () => {
   if (!isDevEnvironment) return null;
 
   return (
-   
+   null
   );
 };
 
