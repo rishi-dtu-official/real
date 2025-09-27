@@ -43,8 +43,14 @@ const GoogleLoginButton = () => {
       // The signed-in user info
       const user = result.user;
       
-      console.log('User signed in:', user);
-      console.log('Access token:', token);
+      // Only log non-sensitive info in development
+      if (process.env.NODE_ENV === 'development') {
+        console.log('User signed in successfully:', {
+          uid: user?.uid,
+          email: user?.email,
+          displayName: user?.displayName
+        });
+      }
       
       // Redirect to dashboard on successful login
       navigate('/dashboard');
@@ -58,13 +64,13 @@ const GoogleLoginButton = () => {
           alert(`🚨 Domain Authorization Error\n\nThe domain "${window.location.origin}" is not authorized for Firebase Authentication.\n\nTo fix this:\n1. Go to Firebase Console → Authentication → Settings → Authorized domains\n2. Add "${window.location.hostname}" to the list\n3. Try signing in again`);
           break;
         case 'auth/popup-closed-by-user':
-          console.log('Popup was closed by user');
+          // User cancelled login - no action needed
           break;
         case 'auth/popup-blocked':
           alert('Popup was blocked by browser. Please allow popups and try again.');
           break;
         case 'auth/cancelled-popup-request':
-          console.log('Popup request was cancelled');
+          // Popup request cancelled - no action needed
           break;
         case 'auth/operation-not-allowed':
           alert('Google sign-in is not enabled. Please enable it in Firebase Console → Authentication → Sign-in method.');

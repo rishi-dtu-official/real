@@ -138,7 +138,7 @@ const Onboarding = () => {
       const parseResult = await parseResume(
         file,
         (progress) => {
-          console.log('Parsing progress:', progress + '%');
+          // Parsing progress tracking (could add UI progress bar here)
         }
       );
       
@@ -217,7 +217,7 @@ const Onboarding = () => {
           });
 
           if (response.ok) {
-            console.log('Referral email sent successfully');
+            // Referral email sent successfully
             alert('Referral notification sent successfully to ' + formData.referral.name + '!');
           } else {
             console.error('Failed to send referral email');
