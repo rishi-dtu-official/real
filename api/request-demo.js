@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer';
 
 // Configure nodemailer with Titan Email SMTP
-const transporter = nodemailer.createTransporter({
+const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || 'smtp.titan.email',
   port: process.env.SMTP_PORT || 465,
   secure: true, // SSL/TLS
