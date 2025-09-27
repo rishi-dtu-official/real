@@ -1,4 +1,4 @@
-const nodemailer = require('nodemailer');
+import nodemailer from 'nodemailer';
 
 // Configure nodemailer with Titan Email SMTP
 const transporter = nodemailer.createTransporter({
