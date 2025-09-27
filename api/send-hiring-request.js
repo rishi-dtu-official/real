@@ -12,6 +12,16 @@ const transporter = nodemailer.createTransporter({
 });
 
 export default async function handler(req, res) {
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
   // Only allow POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -261,7 +271,7 @@ For questions, contact: contactus@fornixai.tech
     const mailOptions = {
       from: '"Fornix - Hiring Platform" <contactus@fornixai.tech>',
       to: 'rishirajprajapati22@gmail.com',
-      cc: 'contactus@fornixai.tech', // Copy to company email
+      cc: 'support@fornixai.tech', // Copy to company email
       subject: `🚨 New Hiring Request: ${jobPosition} at ${organisation}`,
       text: textContent,
       html: htmlContent,
@@ -385,9 +395,25 @@ For questions, contact: contactus@fornixai.tech
 
   } catch (error) {
     console.error('Error sending hiring request email:', error);
+    
+    // More specific error handling
+    if (error.code === 'EAUTH') {
+      return res.status(500).json({ 
+        error: 'SMTP Authentication failed', 
+        details: 'Invalid email credentials' 
+      });
+    }
+    
+    if (error.code === 'ECONNECTION') {
+      return res.status(500).json({ 
+        error: 'SMTP Connection failed', 
+        details: 'Cannot connect to email server' 
+      });
+    }
+    
     res.status(500).json({ 
       error: 'Failed to submit hiring request', 
-      details: error.message 
+      details: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
     });
   }
 }
