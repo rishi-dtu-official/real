@@ -2,12 +2,12 @@ const nodemailer = require('nodemailer');
 
 // Configure nodemailer with Titan Email SMTP
 const transporter = nodemailer.createTransporter({
-  host: 'smtp.titan.email',
-  port: 465,
+  host: process.env.SMTP_HOST || 'smtp.titan.email',
+  port: process.env.SMTP_PORT || 465,
   secure: true, // SSL/TLS
   auth: {
-    user: 'contactus@fornixai.tech',
-    pass: '1978@au.coM'
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS
   }
 });
 
