@@ -125,45 +125,42 @@ export default async function handler(req, res) {
       <body>
         <div class="container">
           <div class="header">
-            <div class="logo">F</div>
-            <h1 class="title">Fornix</h1>
-            <p class="subtitle">Professional Referral Notification</p>
+          
+            <h1 class="title">Fornix AI</h1>
+            <p class="subtitle">Professional Referral</p>
           </div>
           
           <div class="content">
             <p>Hello <strong>${referralName}</strong>,</p>
             
-            <p>I hope this message finds you well. You've been listed as a referral contact by a talented professional who is actively seeking new career opportunities.</p>
+            <p>I hope this message finds you well. You've been listed as a referral contact by your friend/Colleague.</p>
             
             <div class="user-info">
               <h3 style="margin-top: 0; color: #374151;">Candidate Information:</h3>
               <p><strong>Name:</strong> ${userName}</p>
               <p><strong>Email:</strong> ${userEmail}</p>
-              <p><strong>Platform:</strong> Fornix - Professional Career Platform</p>
+              <p><strong>Platform:</strong> <a href="https://fornixai.tech" target="_blank">fornixai.tech</a></p>
             </div>
             
             <div class="highlight">
               <p><strong>Why you're receiving this:</strong><br>
-              ${userName} has identified you as someone who could potentially provide valuable insights or assistance in their job search journey. They believe your professional network and expertise could be beneficial for their career advancement.</p>
+              ${userName} has recently joined our platform. You can also join us to get direct job interviews and freelance project alerst based on your profile</p>
             </div>
             
-            <p>This notification is sent to inform you that:</p>
+            <p><strong>Who we are?</strong></p>
             <ul>
-              <li>You've been listed as a professional reference/contact</li>
-              <li>The candidate values your professional opinion and network</li>
-              <li>You may be contacted directly for potential opportunities or advice</li>
+              <li>Fornix AI sends you job and projects alerts, tailored to your skills and experience.You don't have to apply to every other job.</li>
+              <li>We match you with startups based on your profile and skills</li>
+              <li>Bypass traditional ATS filters and let your skills speak directly to opportunities. </li>
             </ul>
             
-            <p><strong>No immediate action is required</strong> - this is simply a courtesy notification. If ${userName} hasn't reached out to you directly yet, they may do so in the future regarding specific opportunities.</p>
+            <p><strong>No immediate action is required</strong> - this is simply a courtesy notification. You can register on our platform , Get Discovered by startups around the World, work with them, grow your skills, expand your network, and build a better version of yourself.</p>
             
-            <div class="highlight">
-              <p><strong>About Fornix:</strong><br>
-              Fornix is a professional career platform that helps talented individuals connect with opportunities and build meaningful professional relationships. We facilitate authentic networking and career advancement.</p>
-            </div>
+          
             
-            <p>If you have any questions about this notification or would like to learn more about Fornix, please don't hesitate to contact our support team.</p>
+            <p>If you have any questions about this notification or would like to learn more about Fornix, please don't hesitate to visit our page <a href="https://fornixai.tech" target="_blank">fornixai.tech</a>.</p>
             
-            <p>Thank you for being part of ${userName}'s professional network!</p>
+          
             
             <p>Best regards,<br>
             <strong>The Fornix Team</strong></p>
