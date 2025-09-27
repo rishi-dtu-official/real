@@ -175,9 +175,9 @@ const Dashboard = () => {
               <img 
                 src={logo} 
                 alt="Fornix Logo" 
-                className="h-8 w-auto"
+                className="h-8 w-10"
               />
-              <span className="text-xl font-bold text-gray-900">Fornix Dashboard</span>
+              <span className="text-xl font-bold text-gray-900">Dashboard</span>
             </div>
             <div className="flex gap-2">
               {!editMode && (
@@ -604,7 +604,7 @@ const Dashboard = () => {
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </div>
-                    <span className="text-gray-900 font-medium">AI-based Profile Verification Request Sent</span>
+                    <span className="text-gray-900 font-medium">AI-based Profile Verification Request</span>
                     <span className="text-sm text-orange-600 bg-orange-50 px-2 py-1 rounded-full">Sent</span>
                   </div>
                 </div>
@@ -614,7 +614,7 @@ const Dashboard = () => {
             {/* Next Steps */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg font-semibold text-gray-900">What Happens Next</CardTitle>
+                <CardTitle className="text-lg font-semibold text-gray-900">What's Next</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
