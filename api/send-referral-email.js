@@ -158,9 +158,8 @@ export default async function handler(req, res) {
             
           
             
-            <p>If you have any questions about this notification or would like to learn more about Fornix, please don't hesitate to visit our page <a href="https://fornixai.tech" target="_blank">fornixai.tech</a>.</p>
             
-          
+            <p>If you have any questions about this notification or would like to learn more about Fornix, please don't hesitate to visit our page <a href="https://fornixai.tech" target="_blank">fornixai.tech</a>.</p>
             
             <p>Best regards,<br>
             <strong>The Fornix Team</strong></p>

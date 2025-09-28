@@ -74,7 +74,10 @@ const Dashboard = () => {
 
   // Enter edit mode
   const startEdit = () => {
-    setEditData({ ...userProfile });
+    setEditData({ 
+      ...userProfile,
+      preferences: userProfile.preferences || { primary: '', secondary: '' }
+    });
     setEditMode(true);
   };
 
@@ -264,7 +267,7 @@ const Dashboard = () => {
                 {resumeError && <span className="text-sm text-red-500">{resumeError}</span>}
                 {editData?.resumeData?.extractedText && (
                   <div className="flex items-center space-x-2">
-                    <Badge variant="secondary" className="bg-green-100 text-green-800">✅ Parsed</Badge>
+                    <Badge variant="secondary" className="bg-green-100 text-green-800">Parsed</Badge>
                     <span className="text-sm text-gray-600">Resume parsed successfully</span>
                   </div>
                 )}
@@ -313,6 +316,88 @@ const Dashboard = () => {
         </Card>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          {/* Professional Expertise Preferences */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Professional Expertise</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {editMode ? (
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Primary Expertise *</label>
+                    <select
+                      className="block w-full border border-gray-300 rounded px-3 py-2"
+                      value={editData?.preferences?.primary || ''}
+                      onChange={e => handleEditChange('preferences', { ...editData?.preferences, primary: e.target.value })}
+                    >
+                      <option value="">Select primary expertise</option>
+                      <option value="Frontend">Frontend</option>
+                      <option value="Backend">Backend</option>
+                      <option value="Fullstack">Fullstack</option>
+                      <option value="AI">AI</option>
+                      <option value="Product Management">Product Management</option>
+                      <option value="UI/UX">UI/UX</option>
+                      <option value="Applied AI (LLM, RAG)">Applied AI (LLM, RAG)</option>
+                      <option value="ML (Algorithms, Theoretical)">ML (Algorithms, Theoretical)</option>
+                      <option value="Data Analyst">Data Analyst</option>
+                      <option value="App Development">App Development</option>
+                      <option value="Programmer (DSA, Algorithms)">Programmer (DSA, Algorithms)</option>
+                      <option value="Designer Graphic">Designer Graphic</option>
+                      <option value="Non-tech (Management, Marketing, Ops)">Non-tech (Management, Marketing, Ops)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Secondary Expertise (Optional)</label>
+                    <select
+                      className="block w-full border border-gray-300 rounded px-3 py-2"
+                      value={editData?.preferences?.secondary || 'none'}
+                      onChange={e => handleEditChange('preferences', { ...editData?.preferences, secondary: e.target.value === 'none' ? '' : e.target.value })}
+                    >
+                      <option value="none">None</option>
+                      <option value="Frontend">Frontend</option>
+                      <option value="Backend">Backend</option>
+                      <option value="Fullstack">Fullstack</option>
+                      <option value="AI">AI</option>
+                      <option value="Product Management">Product Management</option>
+                      <option value="UI/UX">UI/UX</option>
+                      <option value="Applied AI (LLM, RAG)">Applied AI (LLM, RAG)</option>
+                      <option value="ML (Algorithms, Theoretical)">ML (Algorithms, Theoretical)</option>
+                      <option value="Data Analyst">Data Analyst</option>
+                      <option value="App Development">App Development</option>
+                      <option value="Programmer (DSA, Algorithms)">Programmer (DSA, Algorithms)</option>
+                      <option value="Designer Graphic">Designer Graphic</option>
+                      <option value="Non-tech (Management, Marketing, Ops)">Non-tech (Management, Marketing, Ops)</option>
+                    </select>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {userProfile.preferences?.primary ? (
+                    <>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-sm font-medium text-gray-700">Primary:</span>
+                        <Badge className="bg-green-100 text-green-800">
+                          {userProfile.preferences.primary}
+                        </Badge>
+                      </div>
+                      {userProfile.preferences?.secondary && (
+                        <div className="flex items-center space-x-2">
+                          <span className="text-sm font-medium text-gray-700">Secondary:</span>
+                          <Badge className="bg-blue-100 text-blue-800">
+                            {userProfile.preferences.secondary}
+                          </Badge>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <p className="text-gray-500">No preferences set yet</p>
+                  )}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
           {/* Work Experience */}
           <Card>
             <CardHeader>
@@ -579,9 +664,50 @@ const Dashboard = () => {
           </Card>
         </div>
 
-        {/* Profile Status & Next Steps */}
+        {/* Current Expertise & Profile Status */}
         {!editMode && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+            {/* Current Expertise Overview */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold text-gray-900">Current Expertise</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {userProfile.preferences?.primary ? (
+                    <>
+                      <div className="text-center p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg">
+                        <Badge className="bg-green-600 text-white text-sm px-3 py-1 mb-2">
+                          Primary
+                        </Badge>
+                        <p className="font-semibold text-gray-900">{userProfile.preferences.primary}</p>
+                      </div>
+                      {userProfile.preferences?.secondary && (
+                        <div className="text-center p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
+                          <Badge className="bg-blue-600 text-white text-sm px-3 py-1 mb-2">
+                            Secondary
+                          </Badge>
+                          <p className="font-semibold text-gray-900">{userProfile.preferences.secondary}</p>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div className="text-center p-4 bg-gray-50 rounded-lg">
+                      <p className="text-gray-500 text-sm">No expertise preferences set</p>
+                      <Button 
+                        onClick={startEdit}
+                        variant="outline"
+                        size="sm"
+                        className="mt-2"
+                      >
+                        Set Preferences
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Profile Status Checklist */}
             <Card>
               <CardHeader>
@@ -599,12 +725,12 @@ const Dashboard = () => {
                   </div>
                   
                   <div className="flex items-center space-x-3">
-                    <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center">
-                      <svg className="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    <div className="w-5 h-5 bg-orange-100 rounded-full flex items-center justify-center">
+                      <svg className="w-3 h-3 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                       </svg>
                     </div>
-                    <span className="text-gray-900 font-medium">AI-based Profile Verification Request</span>
+                    <span className="text-gray-900 font-medium">AI Verification Request</span>
                     <span className="text-sm text-orange-600 bg-orange-50 px-2 py-1 rounded-full">Sent</span>
                   </div>
                 </div>

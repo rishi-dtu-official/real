@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import logo from '@/assets/G6SIcs01.svg';
 
 
@@ -24,6 +25,23 @@ const Onboarding = () => {
   const [sendingReferralEmail, setSendingReferralEmail] = useState(false);
   const navigate = useNavigate();
 
+  // Professional preference options
+  const preferenceOptions = [
+    'Frontend',
+    'Backend', 
+    'Fullstack',
+    'AI',
+    'Product Management',
+    'UI/UX',
+    'Applied AI (LLM, RAG)',
+    'ML (Algorithms, Theoretical)',
+    'Data Analyst',
+    'App Development',
+    'Programmer (DSA, Algorithms)',
+    'Designer Graphic',
+    'Non-tech (Management, Marketing, Ops)'
+  ];
+
   // Form data state
   const [formData, setFormData] = useState({
     name: '',
@@ -35,6 +53,11 @@ const Onboarding = () => {
     workExperience: [{ company: '', role: '', duration: '', description: '' }],
     education: [{ degree: '', school: '', year: '' }],
     projects: [{ title: '', description: '', techStack: [], techStackString: '', link: '' }],
+    // Professional preferences
+    preferences: {
+      primary: '',
+      secondary: ''
+    },
     // Referral information
     referral: {
       name: '',
@@ -546,17 +569,116 @@ const Onboarding = () => {
 
             {/* Step 4: Projects */}
             {currentStep === 4 && (
-              <div>
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-semibold">Projects</h3>
-                  <Button
-                    onClick={() => addArrayItem('projects', { title: '', description: '', techStack: [], techStackString: '', link: '' })}
-                    variant="outline"
-                    size="sm"
-                  >
-                    Add Project
-                  </Button>
+              <div className="space-y-8">
+                {/* Professional Preferences Section */}
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">Professional Expertise Preferences</h3>
+                  
+                  {/* Information Box */}
+                  <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-5 h-5 text-blue-600 mt-0.5">
+                        <svg fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-medium text-blue-900 mb-1">Why we ask for preferences?</h4>
+                        <p className="text-sm text-blue-800 mb-2">
+                          We use this information to segregate profiles based on expertise and conduct profile reviews accordingly. 
+                          This helps us match you with the most relevant opportunities.
+                        </p>
+                        <p className="text-sm text-blue-800 font-medium">
+                          Please fill these preferences as they align with your overall profile and experience.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Card className="mb-6">
+                    <CardHeader>
+                      <CardTitle className="text-base">Select Your Expertise Areas</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Primary Preference */}
+                        <div>
+                          <Label htmlFor="primary-preference">Primary Expertise *</Label>
+                          <Select
+                            value={formData.preferences.primary}
+                            onValueChange={(value) => handleInputChange('preferences', { ...formData.preferences, primary: value })}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select your primary expertise" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {preferenceOptions.map((option) => (
+                                <SelectItem key={option} value={option}>
+                                  {option}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        {/* Secondary Preference */}
+                        <div>
+                          <Label htmlFor="secondary-preference">Secondary Expertise (Optional)</Label>
+                          <Select
+                            value={formData.preferences.secondary || "none"}
+                            onValueChange={(value) => handleInputChange('preferences', { ...formData.preferences, secondary: value === "none" ? "" : value })}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select secondary expertise" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="none">None</SelectItem>
+                              {preferenceOptions
+                                .filter(option => option !== formData.preferences.primary)
+                                .map((option) => (
+                                <SelectItem key={option} value={option}>
+                                  {option}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+
+                      {/* Selected Preferences Display */}
+                      {(formData.preferences.primary || formData.preferences.secondary) && (
+                        <div className="mt-4 p-3 bg-green-50 rounded-lg">
+                          <h4 className="text-sm font-medium text-green-900 mb-2">Selected Preferences:</h4>
+                          <div className="flex flex-wrap gap-2">
+                            {formData.preferences.primary && (
+                              <Badge className="bg-green-100 text-green-800">
+                                Primary: {formData.preferences.primary}
+                              </Badge>
+                            )}
+                            {formData.preferences.secondary && (
+                              <Badge className="bg-blue-100 text-blue-800">
+                                Secondary: {formData.preferences.secondary}
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
                 </div>
+
+                {/* Projects Section */}
+                <div>
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold">Projects</h3>
+                    <Button
+                      onClick={() => addArrayItem('projects', { title: '', description: '', techStack: [], techStackString: '', link: '' })}
+                      variant="outline"
+                      size="sm"
+                    >
+                      Add Project
+                    </Button>
+                  </div>
                 {formData.projects.map((project, index) => (
                   <Card key={index} className="mb-4">
                     <CardContent className="pt-4">
@@ -616,6 +738,7 @@ const Onboarding = () => {
                     </CardContent>
                   </Card>
                 ))}
+                </div>
               </div>
             )}
 
@@ -744,6 +867,21 @@ const Onboarding = () => {
                   </CardContent>
                 </Card>
 
+                {/* Professional Preferences Review */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-base">Professional Expertise Preferences</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      <div><strong>Primary Expertise:</strong> {formData.preferences.primary}</div>
+                      {formData.preferences.secondary && (
+                        <div><strong>Secondary Expertise:</strong> {formData.preferences.secondary}</div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+
                 {/* Projects Review */}
                 <Card>
                   <CardHeader>
@@ -798,6 +936,7 @@ const Onboarding = () => {
                   onClick={nextStep}
                   disabled={
                     (currentStep === 1 && !formData.resumeData.extractedText) ||
+                    (currentStep === 4 && !formData.preferences.primary) ||
                     (currentStep === 5 && (!formData.referral.name || !formData.referral.email)) ||
                     sendingReferralEmail
                   }
@@ -807,7 +946,7 @@ const Onboarding = () => {
               ) : (
                 <Button
                   onClick={handleSubmit}
-                  disabled={isSubmitting || !formData.name || !formData.email || !formData.referral.name || !formData.referral.email}
+                  disabled={isSubmitting || !formData.name || !formData.email || !formData.preferences.primary || !formData.referral.name || !formData.referral.email}
                 >
                   {isSubmitting ? 'Saving...' : 'Complete Setup'}
                 </Button>
