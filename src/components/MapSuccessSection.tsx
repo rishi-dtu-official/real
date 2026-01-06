@@ -1,11 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { useNavigate } from "react-router-dom";
 import heroLandscape from "@/assets/hero-landscape.png";
 
 const MapSuccessSection = () => {
-  const navigate = useNavigate();
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -49,7 +47,6 @@ const MapSuccessSection = () => {
             <Button 
               variant="outline" 
               className="rounded-full bg-sage text-sage-foreground border-sage hover:bg-sage/80"
-              onClick={() => navigate('/auth')}
             >
               Find Work
             </Button>
