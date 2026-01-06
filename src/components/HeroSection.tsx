@@ -1,14 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useParallax } from "@/hooks/use-parallax";
-import { useNavigate } from "react-router-dom";
 import FluidCanvas from "./FluidCanvas";
 import heroLandscape from "@/assets/hero-landscape.png";
 import logo from "@/assets/G6SIcs01.svg";
 
 const HeroSection = () => {
   const { ref, backgroundY } = useParallax();
-  const navigate = useNavigate();
 
   return (
     <section ref={ref} className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -172,9 +170,8 @@ const HeroSection = () => {
             <Button 
               size="lg" 
               className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 text-lg rounded-full"
-              onClick={() => navigate('/auth')}
             >
-              Looking for Work
+              Register your Vacancy
             </Button>
           </motion.div>
           <motion.div
@@ -185,7 +182,6 @@ const HeroSection = () => {
               variant="outline" 
               size="lg" 
               className="border-white text-black hover:bg-white hover:text-foreground px-8 py-4 text-lg rounded-full"
-              onClick={() => navigate('/submit-request')}
             >
               Looking to Hire
             </Button>
