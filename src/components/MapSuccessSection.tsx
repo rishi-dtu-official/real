@@ -12,18 +12,18 @@ const MapSuccessSection = () => {
   const steps = [
     {
       number: "01",
-      title: "For Job Seekers",
-      description: "You apply your same resume to 1000s of jobs. That's repeating same process over and over again.Our platform will end this, letting you focus on what matters.",
+      title: "The Problem",
+      description: "Job searching for senior-level professionals (5+ years) is a full-time job in itself. You compete with 500+ applications and internal referrals for every role posted.",
     },
     {
       number: "02", 
-      title: "For Startups",
-      description: "Get discovered by top talent effortlessly, withour putting so much time and effort into the hiring process, so you can focus on growing your business.",
+      title: "Our Solution",
+      description: "We offer complete done-for-you job search services solving your lack of know-how on marketing yourself and lack of bandwidth to dedicate to the search.",
     },
     {
       number: "03",
-      title: "For Us", 
-      description: "Not just be another job portal. We are here to make a difference.We will solve the pressing issues of hiring industry",
+      title: "The Result", 
+      description: "You get directly invited to interviews without putting hours of effort everyday. We handle all the hard, repetitive work so you can focus on preparing and performing.",
     }
   ];
 
@@ -47,8 +47,9 @@ const MapSuccessSection = () => {
             <Button 
               variant="outline" 
               className="rounded-full bg-sage text-sage-foreground border-sage hover:bg-sage/80"
+              onClick={() => window.open('https://form.typeform.com/to/nmoqxv10', '_blank')}
             >
-              Find Work
+              Apply for Cohort
             </Button>
           </motion.div>
         </motion.div>

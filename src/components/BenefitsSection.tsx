@@ -11,23 +11,23 @@ const BenefitsSection = () => {
   const benefits = [
     {
       icon: BarChart,
-      title: "Amplify Your Potential",
-      description: "Unlock AI driven reccomendations to improve your profile, Discover jobs and projects as per your skills and experience."
+      title: "Stand Out From 500+ Applicants",
+      description: "We polish your profile and execute an aggressive, structured job targeting strategy so you rise above the pile of competing applicants."
     },
     {
       icon: Globe,
-      title: "Control Your Global Exposure", 
-      description: "Get Discovered by startups around the World, work with them, grow your skills, expand your network, and build a global career."
+      title: "40–50 Targeted Applications Daily", 
+      description: "We find and apply to roles on your behalf every single day, meticulously tailoring your resume for each application to maximize recruiter visibility."
     },
     {
       icon: Languages,
-      title: "Fair Skill-Based Opportunities",
-      description: "Get judged for what you can do, not just your résumé. Bypass traditional ATS filters and let your skills speak directly to opportunities."
+      title: "100% Human-Written, Zero AI",
+      description: "Every resume, application, and outreach message is written by our team not AI. So the person reading actually reads about you, not AI slop."
     },
     {
       icon: TrendingUp,
-      title: "Hassle-Free Access",
-      description: "No more applying to hundreds of jobs manually. Startups find you directly, saving your time and effort while maximizing your chances."
+      title: "Pay Only When It Works",
+      description: "$99 onboarding fee, then $99 per interview secured. No hidden costs. We keep working until you land your next offer."
     }
   ];
 
@@ -47,7 +47,7 @@ const BenefitsSection = () => {
             animate={inView ? { opacity: 1 } : { opacity: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            For Talents
+            For Job Seekers
           </motion.p>
           <motion.h2 
             className="text-5xl md:text-6xl font-bold text-foreground mb-8"
@@ -63,7 +63,7 @@ const BenefitsSection = () => {
             animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            Fornix helps you discover jobs and projects based on your profile, without individually applying to each of them.
+            A small team of experts dedicated to landing your next job offer. Done-for-you job search for executive and senior-level professionals.
           </motion.p>
         </motion.div>
 

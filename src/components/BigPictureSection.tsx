@@ -14,19 +14,19 @@ const BigPictureSection = () => {
   const features = [
     {
       number: "01",
-      title: "Get reccomended Talent effortlessly: No more digging through resumes, so you invest time, energy and money in what matters.",
+      title: "Niche Positioning – We identify and position you in a niche market based on your expertise, determined during your onboarding call. We create your personal brand value around LinkedIn.",
     },
     {
       number: "02",
-      title: "Get Every profile with 100% accuracy, no more resume lies: We verify everything so you know exactly what you're getting."
+      title: "Profile Building – We craft compelling resumes and LinkedIn profiles that project the best version of you. Each application is written by us, not AI, so recruiters actually read about you."
     },
     {
       number: "03",
-      title: "Filter candidates with real parameters, not by ATS/Resume Keywords: Interview with best fits and reduce possibility of Bad Hires."
+      title: "Applications – We find and apply to 40–50 targeted roles daily on your behalf, meticulously tailoring your resume for each application to maximize visibility with recruiters."
     },
     {
       number: "04",
-      title: "Majority of operations handled by us, so can focus on final interview and hiring decisions, not the entire hiring process."
+      title: "Direct Outreach – We identify and contact hiring managers, cold outreach to recruiters, and engage potential employers daily. You appear directly for interviews, rest all done by our team."
     }
   ];
 
@@ -105,9 +105,9 @@ const BigPictureSection = () => {
               <Button 
                 variant="outline" 
                 className="rounded-full bg-sage text-sage-foreground border-sage hover:bg-sage/80"
-                onClick={() => navigate('/submit-request')}
+                onClick={() => window.open('https://form.typeform.com/to/nmoqxv10', '_blank')}
               >
-                Contact Us
+                Apply for Cohort
               </Button>
             </motion.div>
           </motion.div>

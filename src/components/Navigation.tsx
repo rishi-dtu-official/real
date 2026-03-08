@@ -5,9 +5,9 @@ import { useActiveSection } from "@/hooks/useActiveSection";
 const NAV_LINKS = [
   { id: "map-success", label: "Home" },
   { id: "specifications", label: "Mission" },
-  { id: "big-picture", label: "For Companies" },
-  { id: "benefits", label: "For Talent" },
-  { id: "data-visualization", label: "Data" },
+  { id: "big-picture", label: "How We Do It" },
+  { id: "benefits", label: "For Job Seekers" },
+  { id: "pricing", label: "Pricing" },
   { id: "contact", label: "Contact" },
 ];
 
@@ -19,7 +19,7 @@ const Navigation = () => {
       {/* Static Logo - Only visible on Hero Section, doesn't follow scroll */}
       <div className="absolute top-4 left-6 z-50">
         <div className="text-4xl font-bold text-foreground">
-          Fornix AI
+          
         </div>
       </div>
 
@@ -65,15 +65,7 @@ const Navigation = () => {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="bg-white/20 backdrop-blur-md rounded-full shadow-lg border border-black/20"
         >
-          <div className="p-2">
-            <Button 
-              variant="default" 
-              size="sm" 
-              className="rounded-full px-6"
-            >
-              Register your Vacancy
-            </Button>
-          </div>
+          
         </motion.div>
       </div>
     </>

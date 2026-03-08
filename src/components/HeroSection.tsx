@@ -64,7 +64,7 @@ const HeroSection = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 1 }}
           >
-            Get Work{" "}
+            Get Interviews{" "}
           </motion.span>
           <motion.span className="relative inline-block">
             <motion.span
@@ -170,21 +170,16 @@ const HeroSection = () => {
             <Button 
               size="lg" 
               className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 text-lg rounded-full"
+              onClick={() => window.open('https://form.typeform.com/to/nmoqxv10', '_blank')}
             >
-              Register your Vacancy
+              Apply for Cohort
             </Button>
           </motion.div>
           <motion.div
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <Button 
-              variant="outline" 
-              size="lg" 
-              className="border-white text-black hover:bg-white hover:text-foreground px-8 py-4 text-lg rounded-full"
-            >
-              Looking to Hire
-            </Button>
+            
           </motion.div>
         </motion.div>
       </motion.div>

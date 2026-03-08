@@ -65,7 +65,7 @@ const DataVisualizationSection = () => {
               animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              Not just trusted by the best — backed by them too
+              Not just trusted by the best backed by them too
             </motion.h2>
             
             <motion.p 

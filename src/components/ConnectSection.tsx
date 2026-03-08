@@ -67,7 +67,7 @@ const ConnectSection = () => {
           animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          Put hiring
+          Put your job search
           
           on autopilot
         </motion.h2>
@@ -78,7 +78,7 @@ const ConnectSection = () => {
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-          From posting job to Closing, Make process faster , save cash, AI based reccomended hires, and less manual work in shortlisting.
+          $99 onboarding fee. $99 per interview secured. No hidden costs. We keep working until you land your next offer.
         </motion.p>
         
         <form onSubmit={handleDemoRequest}>

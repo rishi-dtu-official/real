@@ -4,7 +4,7 @@ import MapSuccessSection from "@/components/MapSuccessSection";
 import ComparisonSection from "@/components/ComparisonSection";
 import BigPictureSection from "@/components/BigPictureSection";
 import BenefitsSection from "@/components/BenefitsSection";
-import DataVisualizationSection from "@/components/DataVisualizationSection";
+import PricingSection from "@/components/PricingSection";
 import ConnectSection from "@/components/ConnectSection";
 import Footer from "@/components/Footer";
 import { motion } from "framer-motion";
@@ -57,13 +57,13 @@ const Index = () => {
         <BenefitsSection />
       </motion.div>
       <motion.div 
-        id="data-visualization"
+        id="pricing"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, amount: 0.1 }}
         transition={{ duration: 0.6 }}
       >
-        <DataVisualizationSection />
+        <PricingSection />
       </motion.div>
       <motion.div 
         id="contact"

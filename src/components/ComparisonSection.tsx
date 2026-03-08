@@ -13,14 +13,12 @@ const ComparisonSection = () => {
   });
 
   const features = [
-
-    { name: "Verified and Accurate Candidate Profiles", area: true, websurge: false, hyperview: true },
-    { name: "AI based Candidates Reccomendations", area: true, websurge: false, hyperview: false },
-    { name: "AI Resume / Projects Checking System", area: true, websurge: false, hyperview: false },
-    { name: "Candidate Trust Score", area: true, websurge: false, hyperview: false },
-
-    { name: "Ultra-fast Interview Scheduling", area: true, websurge: false, hyperview: false },
-    { name: "Dedicated Hiring Expert support", area: true, websurge: false, hyperview: false },
+    { name: "Niche Positioning & Personal Branding", fornix: true, otherAgencies: false, self: false },
+    { name: "Handcrafted Resume & LinkedIn Profile Building", fornix: true, otherAgencies: false, self: false },
+    { name: "40–50 Targeted Applications Daily", fornix: true, otherAgencies: false, self: false },
+    { name: "Direct Outreach to Hiring Managers & Recruiters", fornix: true, otherAgencies: false, self: false },
+    { name: "100% Human-Written, No AI Slop", fornix: true, otherAgencies: false, self: true },
+    { name: "End-to-End Process Until You Get Interviews", fornix: true, otherAgencies: false, self: false },
   ];
 
   return (
@@ -39,7 +37,7 @@ const ComparisonSection = () => {
             animate={inView ? { opacity: 1 } : { opacity: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            For Companies
+            For Job Seekers
           </motion.p>
           <motion.h2 
             className="text-5xl md:text-6xl font-bold text-foreground mb-8"
@@ -55,7 +53,7 @@ const ComparisonSection = () => {
             animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            You need a solution that helps you get best talent in minimum time and effort. That's why we developed Fornix. A founder friendly approach to streamline your Hiring Program.
+            We handle niche positioning, profile building, daily applications, and direct outreach all 100% human-written. You just show up for interviews.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -67,9 +65,9 @@ const ComparisonSection = () => {
             <Button 
               variant="outline" 
               className="rounded-full bg-sage text-sage-foreground border-sage hover:bg-sage/80"
-              onClick={() => navigate('/submit-request')}
+              onClick={() => window.open('https://form.typeform.com/to/nmoqxv10', '_blank')}
             >
-              Contact Us
+              Apply for Cohort
             </Button>
           </motion.div>
         </motion.div>
@@ -116,14 +114,14 @@ const ComparisonSection = () => {
                 hidden: { opacity: 0, y: -20 },
                 visible: { opacity: 1, y: 0 },
               }}
-            >Linkedin/Job Boards</motion.div>
+            >Other Agencies</motion.div>
             <motion.div 
               className="font-semibold text-lg text-muted-foreground text-center"
               variants={{
                 hidden: { opacity: 0, y: -20 },
                 visible: { opacity: 1, y: 0 },
               }}
-            >Career Site</motion.div>
+            >Self</motion.div>
 
             {/* Feature Rows */}
             {features.map((feature, index) => (
@@ -139,7 +137,7 @@ const ComparisonSection = () => {
                   {feature.name}
                 </motion.div>
                 <motion.div 
-                  key={`${index}-area`} 
+                  key={`${index}-fornix`} 
                   className="py-4 flex justify-center"
                   variants={{
                     hidden: { opacity: 0, scale: 0 },
@@ -147,14 +145,14 @@ const ComparisonSection = () => {
                   }}
                   whileHover={{ scale: 1.2 }}
                 >
-                  {feature.area ? (
+                  {feature.fornix ? (
                     <Check className="w-5 h-5 text-primary" />
                   ) : (
                     <X className="w-5 h-5 text-muted-foreground" />
                   )}
                 </motion.div>
                 <motion.div 
-                  key={`${index}-websurge`} 
+                  key={`${index}-otherAgencies`} 
                   className="py-4 flex justify-center"
                   variants={{
                     hidden: { opacity: 0, scale: 0 },
@@ -162,14 +160,14 @@ const ComparisonSection = () => {
                   }}
                   whileHover={{ scale: 1.2 }}
                 >
-                  {feature.websurge ? (
+                  {feature.otherAgencies ? (
                     <Check className="w-5 h-5 text-primary" />
                   ) : (
                     <X className="w-5 h-5 text-muted-foreground" />
                   )}
                 </motion.div>
                 <motion.div 
-                  key={`${index}-hyperview`} 
+                  key={`${index}-self`} 
                   className="py-4 flex justify-center"
                   variants={{
                     hidden: { opacity: 0, scale: 0 },
@@ -177,7 +175,7 @@ const ComparisonSection = () => {
                   }}
                   whileHover={{ scale: 1.2 }}
                 >
-                  {feature.hyperview ? (
+                  {feature.self ? (
                     <Check className="w-5 h-5 text-primary" />
                   ) : (
                     <X className="w-5 h-5 text-muted-foreground" />
